@@ -41,9 +41,19 @@ Ejecuta el comando docker build -t nestjs-app . en la terminal.
 
 Crea un archivo .env en la raíz del proyecto.
 Copia las variables de entorno del archivo env al nuevo archivo .env.
-Modifica los valores de las variables según tu configuración.
+Modifica los valores de las variables según tu configuración. Necesitas tener rellenar variables referente a:
+
+- credenciales de servidor SMTP
+- credenciales de unsplsh
+- credenciales de base de datos
+- credenciales de S3 bucket
 
 #### 4. Iniciar la aplicación con Docker Compose
 
 Ejecuta el comando docker-compose up.
+
+
+## Documentación API
+
+La documentacion del API con SWAGGER la puede encontrar visitando el endpoint:  URL_BACKEND/api
  
