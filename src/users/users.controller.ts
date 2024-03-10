@@ -8,37 +8,4 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('register')
-  async create(@Body() createUserDto: CreateUserDto) {
-    try{
-      const res = await this.usersService.create(createUserDto);
-      return {
-        'success': true,
-        'data': res
-      }
-    } catch (error) {
-      return {
-        'success': false,
-        'message': error.message
-      }
-    }
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  async findAll() {
-    try{
-      const res = await this.usersService.findAll();
-      return {
-        'success': true,
-        'data': res
-      }
-    }catch (error) {
-      return {
-        'success': false,
-        'message': error.message
-      }
-    }
-  }
-
 }

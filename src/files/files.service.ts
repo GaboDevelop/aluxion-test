@@ -8,6 +8,7 @@ import fetch from 'node-fetch';
 import { getFileNameAndMime, getMimeType } from 'src/utils/file';
 import { createApi } from 'unsplash-js';
 import { ConfigService } from '@nestjs/config';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class FilesService {
@@ -36,7 +37,7 @@ export class FilesService {
     });
   }
 
-  async uploadFile(file: Express.Multer.File){
+  async uploadFile(file: Express.Multer.File, user_id: number){
     try{
       const { originalname } = file;
 
@@ -52,7 +53,7 @@ export class FilesService {
         file_name: originalname,
         key: res.Key,
         mimetype: file.mimetype,
-        user_id: 2,
+        user_id: user_id
       };
 
       const newFile = await this.fileRepository.create(fileData);
@@ -135,7 +136,13 @@ export class FilesService {
       // const res = await this.S3.deleteObject(deleteParams).promise();
         
       const updatedFileData = await this.fileRepository.findOne({ where: { key: String(file_name) } });
-      return updatedFileData;
+      return {
+        id: updatedFileData.id,
+        bucket_url: updatedFileData.bucket_url,
+        file_name: updatedFileData.file_name,
+        key: updatedFileData.key,
+        mimetype: updatedFileData.mimetype
+      }
 
     }catch (error) {
       throw new Error(error.message);
@@ -148,7 +155,7 @@ export class FilesService {
     return Buffer.from(buffer);
   }
 
-  async uploadFileFromUrl(url: string){
+  async uploadFileFromUrl(url: string, user_id: number){
     try{
       const buffer = await this.downloadFileUrl(url);
       const { name, mimetype } = getFileNameAndMime(url);
@@ -165,7 +172,7 @@ export class FilesService {
         file_name: name,
         key: res.Key,
         mimetype: mimetype,
-        user_id: 2,
+        user_id
       };
 
       const newFile = await this.fileRepository.create(fileData);
@@ -240,7 +247,7 @@ export class FilesService {
     }
   }
 
-  async uploadRandomUnsplashToS3(query: string){
+  async uploadRandomUnsplashToS3(query: string, user_id: number){
     try{
       const file = await this.randomUnsplash(query);
       const res =  await this.s3Upload(
@@ -255,7 +262,7 @@ export class FilesService {
         file_name: file.name,
         key: res.Key,
         mimetype: file.mimetype,
-        user_id: 2,
+        user_id
       };
 
       const newFile = await this.fileRepository.create(fileData);

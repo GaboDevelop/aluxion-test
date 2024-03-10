@@ -15,36 +15,6 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) : Promise<number | ConflictException > {
-    const { email, password } = createUserDto;
-
-    const existing_user = await this.userRepository.findOne({ where: { email } });
-
-    if (existing_user) {
-      throw new ConflictException('Email already in use');
-    }
-
-    const is_email_valid = validateEmail(email);
-    if (!is_email_valid) {
-      throw new ConflictException('Invalid email');
-    }
-
-    if (password.length < 8) {
-      throw new ConflictException('Password must be at least 8 characters');
-    }
-
-    const password_hash = await bcrypt.hash(password, 10);
-
-    const user = this.userRepository.create({
-      email,
-      password: password_hash,
-    });
-
-    // return id of the newly created user
-    const { id } = await this.userRepository.save(user);
-    return id;
-  }
-
   findAll() {
     return `This action returns all users`;
   }

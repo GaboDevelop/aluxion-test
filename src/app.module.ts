@@ -7,19 +7,23 @@ import { MailModule } from './mail/mail.module';
 import { MailerModule } from '@nestjs-modules/mailer';  
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { FilesModule } from './files/files.module';
+import * as dotenv from 'dotenv';
 
+dotenv.config();
+
+console.log(process.env.SECRET_OAUTH)
 
 @Module({
   imports: [
     MailerModule.forRootAsync({
       useFactory: () => ({
         transport: {
-          host: 'sandbox.smtp.mailtrap.io',
+          host: process.env.SMTP_HOST,
           secure: false, // upgrade later with STARTTLS
-          port: 25,
+          port: process.env.SMTP_PORT,
           auth: {
-              user: '82c5f897dbae58',
-              pass: 'fea0b9b3e69341',
+              user: process.env.SMTP_USER,
+              pass: process.env.SMTP_PASSWORD,
           },
         },
         defaults: {

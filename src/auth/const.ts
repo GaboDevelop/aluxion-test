@@ -1,4 +1,10 @@
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+
+
 export const jwtConstants = {
     // generate secrete
-    secret: 'ALUXION2024'
+    secret: process.env.SECRET_OAUTH,
 };
